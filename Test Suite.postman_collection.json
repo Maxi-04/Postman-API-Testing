@@ -1,0 +1,779 @@
+{
+	"info": {
+		"_postman_id": "89c71241-1b7a-4714-8e38-d312183c958f",
+		"name": "Test Suite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35149388",
+		"_collection_link": "https://bold-resonance-697468.postman.co/workspace/8d4ba3d2-de77-4517-86b5-a40d1195b107/collection/35149388-89c71241-1b7a-4714-8e38-d312183c958f?action=share&source=collection_link&creator=35149388"
+	},
+	"item": [
+		{
+			"name": "TC #1 - Flujo E2E - Tarjeta Trello",
+			"item": [
+				{
+					"name": "Crear Card",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"cardA\", \"cardA\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"pm.environment.set(\"idCardA\", body.id)\r",
+									"\r",
+									"pm.expect(pm.response.code).to.eq(200); // Validación inicial\r",
+									"\r",
+									"pm.test(\"Se espera que la tarjeta tenga un ID y Nombre\", () => {\r",
+									"    pm.expect(body.id).to.be.a('string');\r",
+									"    pm.expect(body.name).to.be.a('string').and.to.be.eql(pm.environment.get(\"cardA\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/cards/?idList={{ListaA}}&name={{cardA}}&key={{Key}}&token={{Token}}",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"cards",
+								""
+							],
+							"query": [
+								{
+									"key": "idList",
+									"value": "{{ListaA}}"
+								},
+								{
+									"key": "name",
+									"value": "{{cardA}}"
+								},
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validacion",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"const name = body.name\r",
+									"const id = body.id\r",
+									"const nameCardA = pm.environment.get(\"cardA\")\r",
+									"\r",
+									"\r",
+									"pm.test(\"Se espera que exista CardA\", ()=> {\r",
+									"    pm.expect(name).to.be.eql(nameCardA)\r",
+									"});\r",
+									"\r",
+									"pm.expect(body.idList).to.be.eql(pm.environment.get(\"ListaA\")); // Asegura que está en la lista correcta\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/cards/:id?key={{Key}}&token={{Token}}",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idCardA}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Card",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"newNameCard\", \"newNameCard\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"const name = body.name \r",
+									"\r",
+									"pm.test(\"Se espera que el NAME se haya cambiado exitosamente\", function () {\r",
+									"    pm.expect(name).to.be.eql(\"newNameCard\")\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/cards/:id?name={{newNameCard}}&key={{Key}}&token={{Token}}",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{newNameCard}}"
+								},
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idCardA}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mover a Lista B",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const doing = pm.environment.get(\"ListaB\");\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"const list = body.idList\r",
+									"\r",
+									"pm.test(\"Se espera que la CARD se haya cambiado a la LISTA B\", function () {\r",
+									"    pm.expect(list).to.be.eql(doing)\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/cards/:id?idList={{ListaB}}&key={{Key}}&token={{Token}}",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "idList",
+									"value": "{{ListaB}}"
+								},
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idCardA}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mover a Lista D",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const done = pm.environment.get(\"ListaC\");\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"const list = body.idList\r",
+									"\r",
+									"pm.test(\"Se espera que la CARD se haya cambiado a la LISTA C\", function () {\r",
+									"    pm.expect(list).to.be.eql(done)\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/cards/:id?idList={{ListaC}}&key={{Key}}&token={{Token}}",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "idList",
+									"value": "{{ListaC}}"
+								},
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idCardA}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Card",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/cards/:id?key={{Key}}&token={{Token}}",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idCardA}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validacion",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Se espera que la CARD haya sido eliminada correctamente\", ()=> {\r",
+									"    pm.expect(pm.response.code).to.be.eql(404)\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/cards/:id?key={{Key}}&token={{Token}}",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{idCardA}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TC #2 - Validaciones de Datos JSON",
+			"item": [
+				{
+					"name": "Assertions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"const trello = body.trello\r",
+									"const primerItem = body.trello[0]\r",
+									"const primerItemName = primerItem.name \r",
+									"const primerItemEmoji = primerItem.native\r",
+									"const primerItemX = primerItem.sheetX\r",
+									"const primerItemTexts = primerItem.texts\r",
+									"const primerItemLOL = primerItem.LOL\r",
+									"const primerItemKeywords = primerItem.keywords\r",
+									"\r",
+									"pm.test(\"Se espera que el RESPONSE sea un OBJETO\", function() {\r",
+									"    pm.expect(body).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que el RESPONSE sea un ARRAY\", ()=> {\r",
+									"    pm.expect(trello).to.be.an(\"array\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que el RESPONSE sea un OBJETO\", function () {\r",
+									"    pm.expect(primerItem).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que el NOMBRE este en formato STRING y sea igual a GRINNING FACE\", function () {\r",
+									"    pm.expect(primerItemName).to.be.an(\"string\").and.to.eql(\"GRINNING FACE\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que el EMOJI este en formato STRING y sea igual a 😀\", function () {\r",
+									"    pm.expect(primerItemEmoji).to.be.a(\"string\").and.to.be.eql(\"😀\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que SHEETX este en formato NUMBER y sea igual a 30\", function () {\r",
+									"    pm.expect(primerItemX).to.be.a(\"number\").and.to.be.eql(30)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que TEXTS este NULL\", function () {\r",
+									"    pm.expect(primerItemTexts).to.be.null\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que LOL este UNDEFINED\", function () {\r",
+									"    pm.expect(primerItemLOL).to.be.undefined\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que GRIN sea uno de los siguientes valores\", function () {\r",
+									"    pm.expect(\"grin\").to.be.oneOf([\"maxi\", \"grin\", \"pablo\"])\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que KEYWORDS contenga uno de los siguientes valores\", function () {\r",
+									"    pm.expect(primerItemKeywords).to.include(\"grin\", \"maxi\")\r",
+									"});\r",
+									"\r",
+									"console.log(body)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/emoji",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"emoji"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar Propiedades Objeto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"const segundoItem = body.trello[1]\r",
+									"const tercerItem = body.trello[2]\r",
+									"\r",
+									"const myTest1 = {\r",
+									"    \"unified\": \"1F601\",\r",
+									"    \"name\": \"GRINNING FACE WITH SMILING EYES\",\r",
+									"    \"native\": \"😁\",\r",
+									"    \"shortName\": \"grin\"\r",
+									"};\r",
+									"\r",
+									"const id = \"1F602\"\r",
+									"const name = \"FACE WITH TEARS OF JOY\"\r",
+									"const emoji = \"😂\"\r",
+									"const shortName = \"joy\"\r",
+									"\r",
+									"const myTest2 = {\r",
+									"    \"unified\": id,\r",
+									"    \"name\": name,\r",
+									"    \"native\": emoji,\r",
+									"    \"shortName\": shortName,\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Se espera que el OBJETO del ARRAY [0] contenga esta PROPIEDAD y VALOR\", function () {\r",
+									"    pm.expect(segundoItem).to.include({native: \"😁\"})\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que el OBJETO del ARRAY [1] contenga estas PROPIEDADES y VALORES\", function () {\r",
+									"    pm.expect(segundoItem).to.include(myTest1)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que el OBJETO del ARRAY [2] contenga estas PROPIEDADES y VALORES\", ()=> {\r",
+									"    pm.expect(tercerItem).to.include(myTest2)\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/emoji",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"emoji"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Propiedad Valor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"const x = body.trello.find(i => i.native === \"👽\") \r",
+									"\r",
+									"pm.test(\"Se espera que el OBJETO co ntenga esta PROPIEDAD y VALOR\", ()=> {\r",
+									"    pm.expect(x).to.include({\"native\": \"👽\"})\r",
+									"});\r",
+									"\r",
+									"console.log(x)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dom}}/emoji",
+							"host": [
+								"{{dom}}"
+							],
+							"path": [
+								"emoji"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TC #3 - Pruebas en Poke API",
+			"item": [
+				{
+					"name": "Practica Pokemon",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// EJERCICIO 1\r",
+									"const body = pm.response.json()\r",
+									"const forms = body.forms[0]\r",
+									"const name = forms.name\r",
+									"\r",
+									"// Metodo 1              Mas Dicifil :/\r",
+									"pm.test(\"Se espera que el OBJETO contenga esta PROPIEDAD y VALOR\", ()=> {\r",
+									"    pm.expect(forms).to.include({name: \"pikachu\"})\r",
+									"});\r",
+									"\r",
+									"// Metodo 2              Mas Facil :)\r",
+									"pm.test(\"Se espera que el NAME sea igual a PIKACHU\", ()=> {\r",
+									"    pm.expect(name).to.be.eql(\"pikachu\")\r",
+									"});\r",
+									"\r",
+									"// EJERCICIO 2\r",
+									"const abilities0 = body.abilities[0]\r",
+									"const abilities1 = body.abilities[1]\r",
+									"const is_hidden0 = abilities0.is_hidden\r",
+									"const is_hidden1 = abilities1.is_hidden\r",
+									"\r",
+									"pm.test(\"Se espera que el RESPONSE sea FALSE\", ()=> {\r",
+									"    pm.expect(is_hidden0).to.be.false\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Se espera que el RESPONSE sea TRUE\", ()=> {\r",
+									"    pm.expect(is_hidden1).to.be.true\r",
+									"});\r",
+									"\r",
+									"// EJERCICIO 3\r",
+									"const game_indices0 = body.game_indices[0]\r",
+									"const version0 = game_indices0.version\r",
+									"const color0 = version0.name\r",
+									"\r",
+									"pm.test(\"Se espera que el NAME/COLOR sea igual a RED\", function () {\r",
+									"    pm.expect(color0).to.be.eql(\"red\")\r",
+									"});\r",
+									"\r",
+									"const game_indices1 = body.game_indices[1]\r",
+									"const version1 = game_indices1.version\r",
+									"const color1 = version1.name\r",
+									"\r",
+									"pm.test(\"Se espera que el NAME/COLOR sea igual a BLUE\", ()=> {\r",
+									"    pm.expect(color1).to.be.eql(\"blue\")\r",
+									"});\r",
+									"\r",
+									"// METODO 1              Mas Dificil 😎\r",
+									"const game_indices2 = body.game_indices[2]\r",
+									"const version2 = game_indices2.version\r",
+									"\r",
+									"pm.test(\"Se espera que el OBJETO del ARRAY [2] contenga estas PROPIEDADES y VALORES\", ()=> {\r",
+									"    pm.expect(version2).to.include({name: \"yellow\"})\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pokeAPI}}/{{pokemon}}/pikachu",
+							"host": [
+								"{{pokeAPI}}"
+							],
+							"path": [
+								"{{pokemon}}",
+								"pikachu"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{Token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
